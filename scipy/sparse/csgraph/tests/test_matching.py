@@ -4,7 +4,7 @@ import numpy as np
 from numpy.testing import assert_array_equal, assert_equal
 import pytest
 
-from scipy.sparse import csr_array, diags_array
+from scipy.sparse import csr_array, csr_array, csc_array, coo_array, csr_matrix, csc_matrix, coo_matrix, diags_array
 from scipy.sparse.csgraph import (
     maximum_bipartite_matching, min_weight_full_bipartite_matching
 )
@@ -286,10 +286,11 @@ linear_sum_assignment_test_cases = product(
           [float("inf"), float("inf"), 1],
           [float("inf"), 7, float("inf")]],
          [10, 1, 7])
-    ])
+    ],
+    [csr_array, csc_array, coo_array, csr_matrix, csc_matrix, coo_matrix])
 
 
-@pytest.mark.parametrize('sign,test_case', linear_sum_assignment_test_cases)
-def test_min_weight_full_matching_small_inputs(sign, test_case):
+@pytest.mark.parametrize('sign,test_case,array_type', linear_sum_assignment_test_cases)
+def test_min_weight_full_matching_small_inputs(sign, test_case, array_type):
     linear_sum_assignment_assertions(
-        min_weight_full_bipartite_matching, csr_array, sign, test_case)
+        min_weight_full_bipartite_matching, array_type, sign, test_case)
